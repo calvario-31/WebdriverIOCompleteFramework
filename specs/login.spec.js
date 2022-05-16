@@ -1,9 +1,11 @@
 const LoginPage = require("../pageobjects/login.page");
 const ShoppingPage = require("../pageobjects/shopping.page");
+const { getValidCredentials } = require("../utilities/dataProvider");
 
 describe("My Login application", () => {
     it("should login with valid credentials", async () => {
-        await LoginPage.login("standard_user", "secret_sauce");
+        const credentials = getValidCredentials();
+        await LoginPage.login(credentials.username, credentials.password);
         await ShoppingPage.verifyPage();
     });
 });
