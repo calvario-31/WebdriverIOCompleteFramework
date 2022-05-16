@@ -214,14 +214,14 @@ exports.config = {
      * @param {Object} suite suite details
      */
     beforeSuite: function (suite) {
-        startSuite(suite);
+        startSuite(suite.fullTitle);
     },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
     beforeTest: async function (test, context) {
         log.info("beforeTest info");
-        startTest(test);
+        startTest(test.title);
         await new Page().open();
         browser.deleteAllCookies();
         browser.maximizeWindow();
@@ -260,7 +260,7 @@ exports.config = {
             status = "FAILED";
         }
         endTest(status);
-        if (!passed) {
+        if (passed) {
             const testName = test.title.replaceAll(" ", "_");
             await browser.saveScreenshot(`${screenshotPath}/${testName}.png`);
         }
