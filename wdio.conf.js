@@ -1,4 +1,8 @@
 const Page = require("./pageobjects/page");
+const fs = require("fs");
+
+const screenshotPath = "./resources/screenshots";
+const { log, startTest, endTest, startSuite } = require("./utilities/logger");
 
 exports.config = {
     //
@@ -55,9 +59,9 @@ exports.config = {
             // grid with only 5 firefox instances available you can make sure that not more than
             // 5 instances get started at a time.
             maxInstances: 5,
-            //
             browserName: "chrome",
             acceptInsecureCerts: true,
+            outputDir: "./resources/logs",
             // If outputDir is provided WebdriverIO can capture driver session logs
             // it is possible to configure which logTypes to include/exclude.
             // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
@@ -155,8 +159,10 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    // },
+    onPrepare: function (config, capabilities) {
+        fs.rmSync(screenshotPath, { recursive: true, force: true });
+        fs.mkdirSync(screenshotPath);
+    },
     /**
      * Gets executed before a worker process is spawned and can be used to initialise specific service
      * for that worker as well as modify runtime environments in an async fashion.
@@ -207,12 +213,15 @@ exports.config = {
      * Hook that gets executed before the suite starts
      * @param {Object} suite suite details
      */
-    // beforeSuite: function (suite) {
-    // },
+    beforeSuite: function (suite) {
+        startSuite(suite);
+    },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
     beforeTest: async function (test, context) {
+        log.info("beforeTest info");
+        startTest(test);
         await new Page().open();
         browser.deleteAllCookies();
         browser.maximizeWindow();
@@ -239,8 +248,23 @@ exports.config = {
      * @param {Boolean} result.passed    true if test has passed, otherwise false
      * @param {Object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
-    // },
+    afterTest: async function (
+        test,
+        context,
+        { error, result, duration, passed, retries }
+    ) {
+        let status;
+        if (passed) {
+            status = "PASSED";
+        } else {
+            status = "FAILED";
+        }
+        endTest(status);
+        if (!passed) {
+            const testName = test.title.replaceAll(" ", "_");
+            await browser.saveScreenshot(`${screenshotPath}/${testName}.png`);
+        }
+    },
 
     /**
      * Hook that gets executed after the suite has ended
