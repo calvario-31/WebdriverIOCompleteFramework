@@ -5,10 +5,6 @@ class LoginPage extends Page {
     #passwordInput = "#password";
     #loginButton = "#login-button";
 
-    constructor() {
-        super();
-    }
-
     login = async (username, password) => {
         await this.typeText(this.#userNameInput, username);
         await this.typeText(this.#passwordInput, password);
