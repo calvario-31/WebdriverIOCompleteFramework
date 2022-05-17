@@ -68,15 +68,15 @@ const startSuite = (suiteName) => {
 
 const log = {
     info: (message) => {
-        loggerDebug.info(`${tagName}: ${message}`);
-        logger.info(`${tagName}: ${message}`);
+        loggerDebug.info(` ${tagName}: ${message}`);
+        logger.info(` ${tagName}: ${message}`);
     },
     debug: (message) => {
         loggerDebug.debug(`${tagName}: ${message}`);
     },
     warn: (message) => {
-        loggerDebug.warn(`${tagName}: ${message}`);
-        logger.warn(`${tagName}: ${message}`);
+        loggerDebug.warn(` ${tagName}: ${message}`);
+        logger.warn(` ${tagName}: ${message}`);
     },
     error: (message) => {
         loggerDebug.error(`${tagName}: ${message}`);
