@@ -8,4 +8,9 @@ describe("My Login application", () => {
         await LoginPage.login(credentials.username, credentials.password);
         await ShoppingPage.verifyPage();
     });
+
+    it.skip("fail test to test screenshot", async () => {
+        //unskip to test screenshot
+        await ShoppingPage.verifyPage();
+    });
 });
