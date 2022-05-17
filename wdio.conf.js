@@ -220,7 +220,6 @@ exports.config = {
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
     beforeTest: async function (test, context) {
-        log.info("beforeTest info");
         startTest(test.title);
         await new Page().open();
         browser.deleteAllCookies();
@@ -253,15 +252,11 @@ exports.config = {
         context,
         { error, result, duration, passed, retries }
     ) {
-        let status;
-        if (passed) {
-            status = "PASSED";
-        } else {
-            status = "FAILED";
-        }
-        endTest(status);
-        if (passed) {
+        endTest(passed ? "PASSED" : "FAILED");
+
+        if (!passed) {
             const testName = test.title.replaceAll(" ", "_");
+            log.debug(`Saving screenshot with name: ${testName}`);
             await browser.saveScreenshot(`${screenshotPath}/${testName}.png`);
         }
     },

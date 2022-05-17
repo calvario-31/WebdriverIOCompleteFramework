@@ -1,6 +1,8 @@
 const faker = require("@faker-js/faker");
+const { log } = require("../utilities/logger");
 
-const getPersona = () => {
+const getPerson = () => {
+    log.debug("Getting fake info with faker on Persona");
     return {
         nombre: faker.name.firstName(),
         apellido: faker.name.lastName(),
@@ -9,4 +11,4 @@ const getPersona = () => {
     };
 };
 
-module.exports = { getPersona };
+module.exports = { getPerson };
